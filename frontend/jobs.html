@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Job Listings</h1>
+    <div class="filter-container">
+        <form id="filterForm">
+            <select id="scheduleFilter">
+                <option value="">Select Schedule</option>
+                <option value="full">Full-time</option>
+                <option value="part">Part-time</option>
+            </select>
+            <input type="number" id="salaryFilter" placeholder="Minimum Salary">
+            <input type="text" id="experienceFilter" placeholder="Experience">
+            <button type="submit">Apply Filters</button>
+        </form>
+    </div>
+    <div id="jobList"></div>
+    <script src="jobs.js"></script>
+</body>
+</html>
