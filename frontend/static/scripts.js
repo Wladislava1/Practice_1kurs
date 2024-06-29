@@ -3,7 +3,7 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
     const query = document.getElementById('searchQuery').value;
 
     // Отправка запроса на сервер для парсинга вакансий и добавления их в БД
-    fetch('/parse_job/', {
+    fetch('http://localhost:8000/parse_job/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
