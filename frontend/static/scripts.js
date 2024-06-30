@@ -5,9 +5,6 @@ document.getElementById('searchForm').addEventListener('submit', function(event)
     // Отправка запроса на сервер для парсинга вакансий и добавления их в БД
     fetch('http://localhost:8000/parse_job/', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ title: query, schedule: "", salary: 0, experience: "" })
     })
     .then(response => response.json())
