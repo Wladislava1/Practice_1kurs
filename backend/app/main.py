@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Request, Response
+from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from . import models, schemas, crud, database
@@ -29,7 +29,7 @@ def parse_job(job_request: schemas.JobRequest, db: Session = Depends(database.ge
     jobs = crud.parse_and_store_job(job_request, db)
     for job in jobs:
         print(job, job.title)
-    return jobs # Response(content=jobs, media_type='application/json')
+    return jobs 
 
 # Список вакансий с фильтрацией
 @app.get("/jobs/")
