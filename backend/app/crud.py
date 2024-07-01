@@ -2,6 +2,7 @@ import requests
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from . import models, schemas
+from typing import Optional
 
 #  Получение вакансий с hh.ru
 def fetch_jobs_from_hh(query: str):
@@ -38,14 +39,21 @@ def parse_and_store_job(job_request: schemas.JobRequest, db: Session):
     return jobs
 
 # Получение списка вакансий с фильтрацией
-def get_jobs(db: Session, filters: dict):
+def get_jobs(
+    db: Session, 
+    salary: Optional[str] = None,
+    experience: Optional[str] = None,
+    schedule: Optional[str] = None,
+    title: Optional[str] = None,
+    ):
     query = db.query(models.Job)
-    if filters:
-        if filters.get("schedule"):
-            query = query.filter(models.Job.schedule == filters["schedule"])
-        if filters.get("salary"):
-            query = query.filter(models.Job.salary >= filters["salary"])
-        if filters.get("experience"):
-            query = query.filter(models.Job.experience == filters["experience"])
+    if schedule not in ('',None):
+        query = query.filter(models.Job.schedule == schedule)
+    if salary not in ('',None):
+        query = query.filter(models.Job.salary == salary)
+    if experience not in ('',None):
+        query = query.filter(models.Job.experience == experience)
+    if title not in ('',None):
+        query = query.filter(models.Job.title == title)
     jobs = query.all()
     return jsonable_encoder(jobs)

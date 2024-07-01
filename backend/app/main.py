@@ -2,9 +2,14 @@ from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from . import models, schemas, crud, database
+from typing import Optional
 
 models.Base.metadata.create_all(bind=database.engine)
 
+schedule_dict = {
+    'part': 'Гибкий график',
+    'full': 'Полный день'
+}
 app = FastAPI()
 
 # Главная страница, возвращающая index.html
@@ -33,8 +38,14 @@ def parse_job(job_request: schemas.JobRequest, db: Session = Depends(database.ge
 
 # Список вакансий с фильтрацией
 @app.get("/jobs/")
-def get_jobs(db: Session = Depends(database.get_db), filters: dict = None):
-    return crud.get_jobs(db, filters)
+def get_jobs(
+    db: Session = Depends(database.get_db),
+    salary: Optional[str] = None,
+    experience: Optional[str] = None,
+    schedule: Optional[str] = None,
+    title: Optional[str] = None,
+    ):
+    return crud.get_jobs(db, salary=salary, experience=experience, schedule=schedule_dict.get(schedule), title=title)
 
 
 
