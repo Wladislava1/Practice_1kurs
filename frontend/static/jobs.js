@@ -7,8 +7,13 @@ document.getElementById('filterForm').addEventListener('submit', function(event)
     const query = new URLSearchParams({ schedule, salary, experience });
 
     // Получение списка вакансий с фильтрацией
-    fetch(`/jobs/?${query.toString()}`)
-        .then(response => response.json())
+    fetch(`http://localhost:8000/jobs/?${query.toString()}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             const jobList = document.getElementById('jobList');
             jobList.innerHTML = '';
@@ -20,6 +25,6 @@ document.getElementById('filterForm').addEventListener('submit', function(event)
             });
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error fetching jobs:', error);
         });
 });
