@@ -7,7 +7,7 @@ def fetch_jobs_from_hh(query: str):
     url = 'https://api.hh.ru/vacancies'
     params = {
         'text': query,
-        'per_page': 200  # Количество результатов на странице
+        'per_page': 5 # Количество результатов на странице
     }
     response = requests.get(url, params=params)
     response.raise_for_status()
@@ -17,8 +17,9 @@ def fetch_jobs_from_hh(query: str):
 def parse_and_store_job(job_request: schemas.JobRequest, db: Session):
     hh_jobs = fetch_jobs_from_hh(job_request.title)
     jobs = []
-    
+    i = 0
     for hh_job in hh_jobs:
+        print(f"Processing hh_job {i}: {hh_job}")
         # Создание объектов модели Job для каждой вакансии и сохранение их в базе данных
         job = models.Job(
             title=hh_job.get('name'),
@@ -26,11 +27,12 @@ def parse_and_store_job(job_request: schemas.JobRequest, db: Session):
             salary=hh_job.get('salary', {}).get('from', 0) if hh_job.get('salary') else 0,
             experience=hh_job.get('experience', {}).get('name', '')
         )
+        print(f"Processing job {i}: {job}")
         db.add(job)
         db.commit()
         db.refresh(job)
         jobs.append(job)
-    
+        i = i + 1
     return jobs
 
 # Получение списка вакансий с фильтрацией

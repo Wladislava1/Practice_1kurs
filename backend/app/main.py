@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Depends, HTTPException, Request
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from . import models, schemas, crud, database
@@ -7,9 +6,6 @@ from . import models, schemas, crud, database
 models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI()
-
-# Подключение статических файлов из frontend/static/
-app.mount("/static", StaticFiles(directory="/static/"), name="static")
 
 # Главная страница, возвращающая index.html
 @app.get("/", response_class=HTMLResponse)
@@ -22,11 +18,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["POST", "GET"], 
     allow_headers=["*"],
 )
-
-# Обработчики для вашего API
 
 # Для парсинга вакансий и записи в БД
 @app.post("/parse_job/")
