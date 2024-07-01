@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi import FastAPI, Depends, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from . import models, schemas, crud, database
@@ -25,7 +25,11 @@ app.add_middleware(
 # Для парсинга вакансий и записи в БД
 @app.post("/parse_job/")
 def parse_job(job_request: schemas.JobRequest, db: Session = Depends(database.get_db)):
-    return crud.parse_and_store_job(job_request, db)
+    print(job_request.title)
+    jobs = crud.parse_and_store_job(job_request, db)
+    for job in jobs:
+        print(job, job.title)
+    return jobs # Response(content=jobs, media_type='application/json')
 
 # Список вакансий с фильтрацией
 @app.get("/jobs/")
