@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi import FastAPI, Depends, HTTPException, Request, Query
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from . import models, schemas, crud, database
@@ -8,7 +8,9 @@ models.Base.metadata.create_all(bind=database.engine)
 
 schedule_dict = {
     'part': 'Гибкий график',
-    'full': 'Полный день'
+    'full': 'Полный день',
+    'shift': 'Сменный график',
+    'del': 'Удаленная работа'
 }
 app = FastAPI()
 
@@ -44,8 +46,10 @@ def get_jobs(
     experience: Optional[str] = None,
     schedule: Optional[str] = None,
     title: Optional[str] = None,
+     limit: int = Query(100, ge=1),
+    offset: int = Query(0, ge=0)
     ):
-    return crud.get_jobs(db, salary=salary, experience=experience, schedule=schedule_dict.get(schedule), title=title)
+    return crud.get_jobs(db, salary=salary, experience=experience, schedule=schedule_dict.get(schedule), title=title, limit=limit, offset=offset)
 
 
 

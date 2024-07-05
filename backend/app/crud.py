@@ -9,16 +9,22 @@ def fetch_jobs_from_hh(query: str):
     url = 'https://api.hh.ru/vacancies'
     params = {
         'text': query,
-        'per_page': 5 # Количество результатов на странице
+        'per_page': 100 # Количество результатов на странице
     }
-    print(params['text'])
+    if schedule:
+        params['schedule'] = schedule
+    if salary:
+        params['salary'] = salary
+    if experience:
+        params['experience'] = experience
+    
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()['items']
 
 # Парсинг и сохранение вакансий в базу данных
 def parse_and_store_job(job_request: schemas.JobRequest, db: Session):
-    hh_jobs = fetch_jobs_from_hh(job_request.title)
+    hh_jobs = fetch_jobs_from_hh(job_request.title, job_request.schedule, job_request.salary, job_request.experience)
     jobs = []
     for hh_job in hh_jobs:
         # Создание объектов модели Job для каждой вакансии и сохранение их в базе данных
@@ -45,6 +51,8 @@ def get_jobs(
     experience: Optional[str] = None,
     schedule: Optional[str] = None,
     title: Optional[str] = None,
+     limit: int = 100,
+    offset: int = 0
     ):
     query = db.query(models.Job)
     if schedule not in ('',None):
@@ -54,6 +62,7 @@ def get_jobs(
     if experience not in ('',None):
         query = query.filter(models.Job.experience == experience)
     if title not in ('',None):
-        query = query.filter(models.Job.title == title)
-    jobs = query.all()
+        query = query.filter(models.Job.title.ilike(f"%{title}%"))
+
+    jobs = query.offset(offset).limit(limit).all()
     return jsonable_encoder(jobs)
