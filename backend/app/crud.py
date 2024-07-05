@@ -12,11 +12,11 @@ def fetch_jobs_from_hh(query: str, schedule: Optional[str], salary: Optional[int
         'per_page': 100 # Количество результатов на странице
     }
     if schedule:
-        params['schedule'] = schedule
+        params['schedule.name'] = schedule
     if salary:
         params['salary'] = salary
     if experience:
-        params['experience'] = experience
+        params['experience.name'] = experience
     
     response = requests.get(url, params=params)
     response.raise_for_status()
