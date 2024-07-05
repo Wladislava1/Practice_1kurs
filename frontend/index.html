@@ -10,7 +10,16 @@
     <h1>Парсинг вакансий</h1>
     <div class="search-container">
         <form id="searchForm">
-            <input type="text" id="searchQuery" placeholder="Поиск по вакансиям...">
+            <input type="text" id="searchQuery" placeholder="Название вакансии">
+            <select id="searchSchedule">
+                <option value="">Выбрать занятость</option>
+                <option value="full">Полный день</option>
+                <option value="part">Частичная занятость</option>
+                <option value="shift">Сменный график</option>
+                <option value="del">Удаленная работа</option>
+            </select>
+            <input type="number" id="searchSalary" placeholder="Зарплата">
+            <input type="text" id="searchExperience" placeholder="Опыт работы">
             <button type="submit">Поиск</button>
         </form>
     </div>
