@@ -9,6 +9,7 @@ h1 {
 .search-container, .filter-container {
     text-align: center;
     margin: 20px;
+    margin-top: 10px;
 }
 
 #jobList {
