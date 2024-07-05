@@ -5,7 +5,7 @@ from . import models, schemas
 from typing import Optional
 
 #  Получение вакансий с hh.ru
-def fetch_jobs_from_hh(query: str):
+def fetch_jobs_from_hh(query: str, schedule: Optional[str], salary: Optional[int], experience: Optional[str]):
     url = 'https://api.hh.ru/vacancies'
     params = {
         'text': query,
